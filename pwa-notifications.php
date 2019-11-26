@@ -34,6 +34,11 @@ function pwa_plugin_uninstall(){
 }
 register_uninstall_hook(__FILE__, 'pwa_plugin_uninstall');
 
+function pwa_add_footer_tags() {
+  echo '<div>Hello OneSignal</div>';
+}
+add_action( 'wp_footer', 'pwa_add_footer_tags' );
+
 if(!class_exists('PwaNotifications')){
   class PwaNotifications{
     public function __construct(){
@@ -84,6 +89,7 @@ if(!class_exists('PwaNotifications')){
       </form>
     <?php
     }
+    
   }//End class definition
 }//End if class exist
 
