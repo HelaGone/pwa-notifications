@@ -13,17 +13,24 @@
 */
 
 function pwa_plugin_activation(){
-    //Plugin activation actions
+    /*
+     * Plugin activation actions
+     * Should place necessaary files in root
+    */
 }
 register_activation_hook(__FILE__, 'pwa_plugin_activation');
 
 function pwa_plugin_deactivation(){
+  //Plugin deactivation actions
 
 }
 register_deactivation_hook(__FILE__, 'pwa_plugin_deactivation');
 
 function pwa_plugin_uninstall(){
-
+  /*
+   * Plugin deactivation actions
+   * Should delete files pladed in root
+  */
 }
 register_uninstall_hook(__FILE__, 'pwa_plugin_uninstall');
 
