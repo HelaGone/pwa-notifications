@@ -34,11 +34,6 @@ function pwa_plugin_uninstall(){
 }
 register_uninstall_hook(__FILE__, 'pwa_plugin_uninstall');
 
-function pwa_add_footer_tags() {
-  echo '<div>Hello OneSignal</div>';
-}
-add_action( 'wp_footer', 'pwa_add_footer_tags' );
-
 if(!class_exists('PwaNotifications')){
   class PwaNotifications{
     public function __construct(){
@@ -89,12 +84,62 @@ if(!class_exists('PwaNotifications')){
       </form>
     <?php
     }
-    
+
   }//End class definition
 }//End if class exist
 
 if(is_admin()):
 	$options_page = new PwaNotifications();
 endif;
+
+/**
+ * [pwa_add_footer_tags] Add amp tags to footer
+ * @param [null]
+ * @return [void]
+*/
+function pwa_add_footer_tags() {
+  $siteUrl = get_site_url();
+  $options = get_option('pwa_onesignal_option');
+  $appId = $options['pwa_appid_input_field'];
+  echo '<amp-web-push id="amp-web-push" layout="nodislay" helper-iframe-url="'.$siteUrl.'/amp-helper-frame.html?appId='.$appId.'" permission-dialog-url="'.$siteUrl.'/amp-permission-dialog.html?appId='.$appId.'" service-worker-url="'.$siteUrl.'/OneSignalSDKWorker.js?appId='.$appId.'" class="i-amphtml-element i-amphtml-layout-nodisplay" hidden i-amphtml-layout="nodisplay"></amp-web-push>';
+  echo '<amp-install-serviceworker src="'.$siteUrl.'/OneSignalSDKWorker.js?appId='.$appId.'" data-iframe-src="'.$siteUrl.'/install_sw.html" layout="nodisplay" class="i-amphtml-element i-amphtml-layout-nodisplay" hidden i-amphtml-layout="nodisplay">';
+}
+add_action( 'wp_footer', 'pwa_add_footer_tags' );
+
+/**
+ * [pwa_insert_manifest]
+*/
+function pwa_insert_manifest(){
+  $manifest = array(
+    "gcm_sender_id_comment" => "For OneSignal web push notifications, Do not change ID",
+    "gcm_sender_id" => "",
+    "name" => get_bloginfo('name'),
+    "short_name" => "",
+    "description" => get_bloginfo('description'),
+    "icons" => array(
+      array(
+        "src" => get_template_directory_uri().'/images/icon/192.png',
+        "sizes" => "192x192",
+        "type" => "image/png"
+      ),
+      array(
+        "src" => get_template_directory_uri().'/images/icon/152.png',
+        "sizes" => "152x152",
+        "type" => "image/png"
+      )
+    ),
+    "background_color" => "#000000",
+    "theme_color" => "#000000",
+    "display" => "standalone",
+    "orientation" => "portrait",
+    "start_url" => "./",
+    "scope" => "./"
+  );
+  $jsonManifest = json_encode($manifest);
+  $fp = fopen('manifest.json', 'w');
+  fwrite($fp, $jsonManifest);
+  fclose($fp);
+}
+pwa_insert_manifest();
 
 ?>
