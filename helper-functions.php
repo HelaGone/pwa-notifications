@@ -13,7 +13,7 @@
   }
   add_action('wp_footer', 'pwa_add_footer_tags');
 
-  function pwa_insert_manifest(){
+  function pwa_insert_manifest($option, $value="temp"){
     $options = get_option('pwa_manifest_option');
     $fcm_sender_id = $options['pwa_manifest_fcm_sender_id_field'];
     $background_color = $options['pwa_manifest_bg_color_field'];
@@ -49,6 +49,8 @@
     fwrite($fp, $jsonManifest);
     fclose($fp);
   }
-  pwa_insert_manifest();
+
+  // add_action('added_option', 'pwa_insert_manifest');
+  // add_action('updated_option', 'pwa_insert_manifest');
 
 ?>
