@@ -13,16 +13,18 @@
   */
 
   function pwa_plugin_activation(){
-      /*
-       * Plugin activation actions
-       * Should place necessaary files in root
-      */
+    /*
+     * Plugin activation actions
+     * Should place necessaary files in root
+    */
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 
   function pwa_plugin_deactivation(){
     //Plugin deactivation actions
 
+    //Remove metabox on plugin deactivation;
+    remove_meta_box('meta_push_signal', 'post', 'side');
   }
   register_deactivation_hook(__FILE__, 'pwa_plugin_deactivation');
 
