@@ -17,12 +17,8 @@
      * Plugin activation actions
      * Should place necessaary files in root
     */
-    /**
-     * Move files to root
-    */
-    $currentFilePath = '/amp-helper-frame.html';
-    $newFilePath = './';
-    $fileMoved = rename($currentFilePath, $newFilePath);
+    add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
+    add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 

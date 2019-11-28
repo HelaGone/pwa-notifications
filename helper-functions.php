@@ -17,7 +17,41 @@
     wp_nonce_field(__FILE__, '_articulo_push_nonce');
     echo "<label><input type='checkbox' name='_meta_pwa_notifications' value='true' $push_notification_check />Send Web Push Notification</label>";
   }
-  
+
+  /**
+   * Setup rewrite rules for files in root
+  */
+  function pwa_root_files_internal(){
+    // add_rewrite_rule('manifest.json$', 'index.php?manifest=1', 'top');
+    add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
+    add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
+    // add_rewrite_rule('OneSignalSDKWorker.js$', 'index.php?worker=1', 'top');
+  }
+  // add_filter('init', 'pwa_root_files_internal');
+
+  //Add query vars to $query_vars object
+  function pwa_root_files_query_var($query_vars){
+    $query_vars[] = 'helper_frame';
+    $query_vars[] = 'permission_dialog';
+
+    return $query_vars;
+  }
+  add_action('query_vars', 'pwa_root_files_query_var');
+
+  //Parse request
+  function pwa_parse_request($wp){
+    if(array_key_exists('helper_frame', $wp->query_vars)){
+      include 'amp-helper-frame.php';
+      exit();
+    }
+    if(array_key_exists('permission_dialog', $wp->query_vars)){
+      include 'amp-permission-dialog.php';
+      exit();
+    }
+    return;
+  }
+  add_action('parse_request', 'pwa_parse_request');
+
   /**
   * [pwa_add_footer_tags] Add amp tags to footer
   * @param [null]
@@ -69,9 +103,9 @@
     );
 
     $jsonManifest = json_encode($manifest);
-    $fp = fopen('manifest.json', 'w');
-    fwrite($fp, $jsonManifest);
-    fclose($fp);
+    // $fp = fopen('manifest.json', 'w');
+    // fwrite($fp, $jsonManifest);
+    // fclose($fp);
   }
 
   /**
