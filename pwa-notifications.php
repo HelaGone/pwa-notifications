@@ -17,6 +17,12 @@
      * Plugin activation actions
      * Should place necessaary files in root
     */
+    /**
+     * Move files to root
+    */
+    $currentFilePath = '/amp-helper-frame.html';
+    $newFilePath = './';
+    $fileMoved = rename($currentFilePath, $newFilePath);
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 

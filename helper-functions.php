@@ -1,8 +1,27 @@
 <?php
+
   /**
-   * [pwa_add_footer_tags] Add amp tags to footer
-   * @param [null]
+   * Create metabox for notifications
+  */
+  add_action('add_meta_boxes', function(){
+    add_meta_box('meta_push_signal', 'Notificación', 'pwa_push_notification_definition', 'post', 'side', 'high');
+  });
+
+  /**
+   * [pwa_push_notification_definition] This function define the markup for the metabox
+   * @param [object] $post The post object
    * @return [void]
+   */
+  function pwa_push_notification_definition($post){
+    $push_notification_check = (get_post_meta($post->ID, '_meta_pwa_notifications', true)) ? 'checked' : '';
+    wp_nonce_field(__FILE__, '_articulo_push_nonce');
+    echo "<label><input type='checkbox' name='_meta_pwa_notifications' value='true' $push_notification_check />Send Web Push Notification</label>";
+  }
+  
+  /**
+  * [pwa_add_footer_tags] Add amp tags to footer
+  * @param [null]
+  * @return [void]
   */
   function pwa_add_footer_tags() {
     $siteUrl = get_site_url();
@@ -14,18 +33,10 @@
   add_action('wp_footer', 'pwa_add_footer_tags');
 
   /**
-   * Create metabox for notifications
+   * [pwa_insert_manifest] This function create the manifest template in json format
+   * and tries to save the json file in root
   */
-  add_action('add_meta_boxes', function(){
-    add_meta_box('meta_push_signal', 'Notificación', 'pwa_push_notification_definition', 'post', 'side', 'high');
-  });
-  function pwa_push_notification_definition($post){
-    $push_notification_check = (get_post_meta($post->ID, '_meta_pwa_notifications', true)) ? 'checked' : '';
-    wp_nonce_field(__FILE__, '_articulo_push_nonce');
-    echo "<label><input type='checkbox' name='_meta_pwa_notifications' value='true' $push_notification_check />Send Web Push Notification</label>";
-  }
-
-  function pwa_insert_manifest($option, $value="test"){
+  function pwa_insert_manifest(){
     $options = get_option('pwa_manifest_option');
     $fcm_sender_id = $options['pwa_manifest_fcm_sender_id_field'];
     $background_color = $options['pwa_manifest_bg_color_field'];
@@ -63,33 +74,69 @@
     fclose($fp);
   }
 
-  add_action('added_option', 'pwa_insert_manifest', 10, 2);
-  add_action('updated_option', 'pwa_insert_manifest', 10, 3);
+  /**
+  	 * [pwa_sendMessage] Esta función se encarga de enviar una push notification cuando la casilla
+  	 * de enviar push es activada en la creación de una publicación.
+  	 * Solo se ejecuta en publish post
+  	 * @param [string] $title The post title
+     * @param [string] $link The post permalink
+     * @param [string] $id The post ID
+     * @param [string] $excet The post $excerpt
+     * @param [string] $thumb The post thumbnail
+   	 * @return [boolean] $response wheter or not the notification was sent
+  	*/
+  	function pwa_sendMessage($title, $link, $id, $excer, $thumb){
+        $options = get_option('pwa_onesignal_option');
+        $app_id = $options['pwa_appid_input_field'];
+        $rest_api_key = $options['pwa_restapikey_input_field'];
+  	    $mTitle = array("en" => $title);
+  	    $fields = array(
+  	        'app_id' => $app_id,
+  	        'included_segments' => array('Testers'),
+  	        'url' => $link,
+  	        'contents' => $mTitle,
+  	        'chrome_web_image' => $thumb
+  	    );
+  			if($excer!=null){
+  				$mExcerpt = array("en" => $excer);
+  				$fields['headings'] = $mTitle;
+  				$fields['contents'] = $mExcerpt;
+  			}
+  	    $fields = json_encode($fields);
+  	    $ch = curl_init();
+  	    curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+  	    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+  	        "Content-Type: application/json; charset=utf-8",
+  	        "Authorization: Basic $rest_api_key"
+  	    ));
+  	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  	    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+  	    curl_setopt($ch, CURLOPT_POST, TRUE);
+  	    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+  	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+  	    $response = curl_exec($ch);
+  	    curl_close($ch);
+  	    return $response;
+  	}//End pwa_sendMessage function
 
-  add_action('wp_footer', 'pwa_insert_manifest', 10, 4);
-  // function pwa_add_rewrite_rules(){
-  //   $manifest_filename = "manifest.json";
-  //   add_rewrite_rule("^/{$manifest_filename}$", "index.php?{$manifest_filename}=1");
-  // }
-  //
-  // function pwa_generate_manifest_on_the_fly($query){
-  //   if(!property_exists($query, 'query_vars') || !is_array($query->query_vars)){
-  //     return;
-  //   }
-  //   $query_vars_as_string = implode(',', $query->query_vars);
-  //   $manifest_filename = "manifest.json";
-  //
-  //   if(strpos($query_vars_as_string, $manifest_filename) !== false){
-  //     header('Content-Type: application/json');
-  //     echo pwa_insert_manifest();
-  //     exit();
-  //   }
-  // }
-  //
-  // function pwa_setup_hooks(){
-  //   add_action('init', 'pwa_add_rewrite_rules');
-  //   add_action('parse_request', 'pwa_generate_manifest_on_the_fly');
-  // }
-  // add_action('plugins_loaded', 'pwa_setup_hooks');
-
+    /**
+     * [pwa_post_published_notification] This function gets the post objet's info and send the notification by calling
+     * @see pwa_sendMessage
+     * @param [null]
+     * @return [void]
+     * This function is executed in publish post
+    */
+    function pwa_post_published_notification(){
+		  global $post;
+		  $doSendPush = (get_post_meta($post->ID, '_meta_eza_notifications', true)) ? get_post_meta($post->ID, '_meta_eza_notifications', true) : $_POST['_meta_eza_notifications'];
+  		if($doSendPush){
+  			$id = $post->ID;
+  			$title = $post->post_title;
+  			$excerpt = (has_excerpt($id)) ? $post->post_excerpt : null;
+  			$link = get_the_permalink($post->ID);
+  			$thumbnail = get_the_post_thumbnail_url($id, 'middle');
+  			pwa_sendMessage($title, $link, $id, $excerpt, $thumbnail);
+  		}
+	  }
+	  add_action( 'publish_post', 'post_published_notification', 10, 2 );
 ?>
