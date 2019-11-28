@@ -12,13 +12,19 @@
   * Domain Path:       /languages
   */
 
+  /*
+   * OPTIONS
+   * pwa_onesignal_option   --> OPTION FOR ONESIGNAL'S APP ID AND REST API KEY
+   * pwa_manifest_option    --> OPTION FOR MANIFEST.JSON VALUES
+  */
+
   function pwa_plugin_activation(){
     /*
      * Plugin activation actions
      * Should place necessaary files in root
     */
-    add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
-    add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
+    //add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
+    //add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 
@@ -37,6 +43,8 @@
     */
   }
   register_uninstall_hook(__FILE__, 'pwa_plugin_uninstall');
+
+  include_once dirname(__FILE__).'/helper-functions.php';
 
   if(!class_exists('PwaNotifications')){
     class PwaNotifications{
@@ -125,7 +133,6 @@
 
   if(is_admin()):
   	$options_page = new PwaNotifications();
-    include_once dirname(__FILE__).'/helper-functions.php';
   endif;
 
 ?>
