@@ -20,13 +20,12 @@
   /**
    * Setup rewrite rules for files in root
   */
-  function pwa_root_files_internal(){
+  function pwa_add_rewrite_rules(){
     // add_rewrite_rule('manifest.json$', 'index.php?manifest=1', 'top');
     add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
     add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
     // add_rewrite_rule('OneSignalSDKWorker.js$', 'index.php?worker=1', 'top');
   }
-  // add_filter('init', 'pwa_root_files_internal');
 
   //Add query vars to $query_vars object
   function pwa_root_files_query_var($query_vars){
