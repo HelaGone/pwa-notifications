@@ -19,14 +19,14 @@
   */
 
   //Including helper functions
-  include_once dirname(__FILE__).'/helper-functions.php';
+  require_once dirname(__FILE__).'/helper-functions.php';
 
   function pwa_plugin_activation(){
     /*
      * Plugin activation actions
      * Should place necessaary files in root
     */
-    pwa_add_rewrite_rules();
+    $isCopied = copy();
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 

@@ -18,39 +18,6 @@
   }
 
   /**
-   * Setup rewrite rules for files in root
-  */
-  function pwa_add_rewrite_rules(){
-    // add_rewrite_rule('manifest.json$', 'index.php?manifest=1', 'top');
-    add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
-    add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
-    // add_rewrite_rule('OneSignalSDKWorker.js$', 'index.php?worker=1', 'top');
-  }
-
-  //Add query vars to $query_vars object
-  function pwa_root_files_query_var($query_vars){
-    $query_vars[] = 'helper_frame';
-    $query_vars[] = 'permission_dialog';
-
-    return $query_vars;
-  }
-  //add_action('query_vars', 'pwa_root_files_query_var');
-
-  //Parse request
-  function pwa_parse_request($wp){
-    if(array_key_exists('helper_frame', $wp->query_vars)){
-      include 'amp-helper-frame.php';
-      exit();
-    }
-    if(array_key_exists('permission_dialog', $wp->query_vars)){
-      include 'amp-permission-dialog.php';
-      exit();
-    }
-    return;
-  }
-  //add_action('parse_request', 'pwa_parse_request');
-
-  /**
   * [pwa_add_footer_tags] Add amp tags to footer
   * @param [null]
   * @return [void]
