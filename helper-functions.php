@@ -1,18 +1,17 @@
 <?php
-
   /**
    * Create metabox for notifications
   */
   add_action('add_meta_boxes', function(){
-    add_meta_box('meta_push_signal', 'Notificación', 'pwa_push_notification_definition', 'post', 'side', 'high');
+    add_meta_box('meta_push_signal', 'Notifications', 'pwa_push_notification_metabox', 'post', 'side', 'high');
   });
 
   /**
-   * [pwa_push_notification_definition] This function define the markup for the metabox
+   * [pwa_push_notification_metabox] This function define the markup for the metabox
    * @param [object] $post The post object
    * @return [void]
    */
-  function pwa_push_notification_definition($post){
+  function pwa_push_notification_metabox($post){
     $push_notification_check = (get_post_meta($post->ID, '_meta_pwa_notifications', true)) ? 'checked' : '';
     wp_nonce_field(__FILE__, '_articulo_push_nonce');
     echo "<label><input type='checkbox' name='_meta_pwa_notifications' value='true' $push_notification_check />Send Web Push Notification</label>";
@@ -21,13 +20,12 @@
   /**
    * Setup rewrite rules for files in root
   */
-  function pwa_root_files_internal(){
+  function pwa_add_rewrite_rules(){
     // add_rewrite_rule('manifest.json$', 'index.php?manifest=1', 'top');
     add_rewrite_rule('amp-helper-frame.html$', 'index.php?helper_frame=1', 'top');
     add_rewrite_rule('amp-permission-dialog.html$', 'index.php?permission_dialog=1', 'top');
     // add_rewrite_rule('OneSignalSDKWorker.js$', 'index.php?worker=1', 'top');
   }
-  // add_filter('init', 'pwa_root_files_internal');
 
   //Add query vars to $query_vars object
   function pwa_root_files_query_var($query_vars){
@@ -36,7 +34,7 @@
 
     return $query_vars;
   }
-  add_action('query_vars', 'pwa_root_files_query_var');
+  //add_action('query_vars', 'pwa_root_files_query_var');
 
   //Parse request
   function pwa_parse_request($wp){
@@ -50,7 +48,7 @@
     }
     return;
   }
-  add_action('parse_request', 'pwa_parse_request');
+  //add_action('parse_request', 'pwa_parse_request');
 
   /**
   * [pwa_add_footer_tags] Add amp tags to footer
@@ -60,7 +58,7 @@
   function pwa_add_footer_tags() {
     $siteUrl = get_site_url();
     $options = get_option('pwa_onesignal_option');
-    $appId = $options['pwa_appid_input_field'];
+    $appId = ($options) ? $options['pwa_appid_input_field'] : '';
     echo '<amp-web-push id="amp-web-push" layout="nodislay" helper-iframe-url="'.$siteUrl.'/amp-helper-frame.html?appId='.$appId.'" permission-dialog-url="'.$siteUrl.'/amp-permission-dialog.html?appId='.$appId.'" service-worker-url="'.$siteUrl.'/OneSignalSDKWorker.js?appId='.$appId.'" class="i-amphtml-element i-amphtml-layout-nodisplay" hidden i-amphtml-layout="nodisplay"></amp-web-push>';
     echo '<amp-install-serviceworker src="'.$siteUrl.'/OneSignalSDKWorker.js?appId='.$appId.'" data-iframe-src="'.$siteUrl.'/install_sw.html" layout="nodisplay" class="i-amphtml-element i-amphtml-layout-nodisplay" hidden i-amphtml-layout="nodisplay">';
   }
