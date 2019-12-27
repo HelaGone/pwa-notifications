@@ -25,12 +25,12 @@
      * Plugin activation actions
      * Should place necessaary files in root
     */
-    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/amp-helper-frame.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/amp-helper-frame.html');
-    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/amp-permission-dialog.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/amp-permission-dialog.html');
-    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/install_sw.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/install_sw.html');
-    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKUpdaterWorker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/OneSignalSDKUpdaterWorker.js');
-    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKWorker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/OneSignalSDKWorker.js');
-    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/service_worker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/service_worker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/amp-helper-frame.html', $_SERVER['DOCUMENT_ROOT'].'/amp-helper-frame.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/amp-permission-dialog.html', $_SERVER['DOCUMENT_ROOT'].'/amp-permission-dialog.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/install_sw.html', $_SERVER['DOCUMENT_ROOT'].'/install_sw.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKUpdaterWorker.js', $_SERVER['DOCUMENT_ROOT'].'/OneSignalSDKUpdaterWorker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKWorker.js', $_SERVER['DOCUMENT_ROOT'].'/OneSignalSDKWorker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/service_worker.js', $_SERVER['DOCUMENT_ROOT'].'/service_worker.js');
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 
@@ -73,23 +73,12 @@
         add_settings_section('pwa_one_signal_section', 'OneSignal App ID & Rest API Key', array($this, 'pwa_appid_section_callback'), 'pwaOptionsPage');
         add_settings_field('pwa_appid_input_field', 'App ID', array($this, 'pwa_input_apikey_render'), 'pwaOptionsPage', 'pwa_one_signal_section');
         add_settings_field('pwa_restapikey_input_field', 'Rest API Key', array($this, 'pwa_input_restapikey_render'), 'pwaOptionsPage', 'pwa_one_signal_section');
-
-        // register_setting('pwaOptionsPage', 'pwa_manifest_option');
-        // add_settings_section('pwa_manifest_section', 'Menifest Values', array($this, 'pwa_menifest_section_callback'), 'pwaOptionsPage');
-        // add_settings_field('pwa_manifest_bg_color_field', 'Background Color', array($this, 'pwa_render_input_manifest_bg_color'), 'pwaOptionsPage', 'pwa_manifest_section');
-        // add_settings_field('pwa_manifest_theme_color_field', 'Theme Color', array($this, 'pwa_render_input_manifest_theme_color'), 'pwaOptionsPage', 'pwa_manifest_section');
-        // add_settings_field('pwa_manifest_short_name_field', 'Short Name', array($this, 'pwa_render_input_manifest_short_name'), 'pwaOptionsPage', 'pwa_manifest_section');
-        // add_settings_field('pwa_manifest_fcm_sender_id_field', 'FCM Sender ID', array($this, 'pwa_render_input_manifest_fcm_sender_id'), 'pwaOptionsPage', 'pwa_manifest_section');
       }
 
       //Section callbacks
       public function pwa_appid_section_callback(){
         echo 'Paste the App ID & Rest API Key from OneSignal';
       }
-
-      // public function pwa_menifest_section_callback(){
-      //   echo 'Paste the Background Color, Theme Color, Short Name and FCM Sender ID for the app manifest';
-      // }
 
       //Input Fields for OneSignal Configuration
       public function pwa_input_apikey_render(){
@@ -103,30 +92,7 @@
         <?php
       }
 
-      //Input fields for app Manifest configuration
-      /*
-      public function pwa_render_input_manifest_bg_color(){
-        $options = get_option('pwa_manifest_option'); ?>
-        <input type="text" name="pwa_manifest_option[pwa_manifest_bg_color_field]" value="<?php echo $options['pwa_manifest_bg_color_field']; ?>" class="custom_input"/>
-        <?php
-      }
-      public function pwa_render_input_manifest_theme_color(){
-        $options = get_option('pwa_manifest_option'); ?>
-        <input type="text" name="pwa_manifest_option[pwa_manifest_theme_color_field]" value="<?php echo $options['pwa_manifest_theme_color_field']; ?>" class="custom_input" />
-        <?php
-      }
-      public function pwa_render_input_manifest_short_name(){
-        $options = get_option('pwa_manifest_option'); ?>
-        <input type="text" name="pwa_manifest_option[pwa_manifest_short_name_field]" value="<?php echo $options['pwa_manifest_short_name_field']; ?>" class="custom_input" />
-        <?php
-      }
-      public function pwa_render_input_manifest_fcm_sender_id(){
-        $options = get_option('pwa_manifest_option'); ?>
-        <input type="text" name="pwa_manifest_option[pwa_manifest_fcm_sender_id_field]" value="<?php echo $options['pwa_manifest_fcm_sender_id_field']; ?>" class="custom_input"/>
-        <?php
-      }*/
-
-      //Plugin Form
+      //Plugin Forms
       public function pwa_notifications_page(){ ?>
         <form id="pwa_form" action="options.php" method="post" class="">
           <h2>PWA & Notifications</h2>
@@ -136,6 +102,8 @@
             submit_button();
           ?>
         </form>
+
+        <!-- THIS FORM HANDLES THE MANIFEST JSON GENERATION -->
         <form class="pwa_manifest_gen" action="<?php echo plugin_dir_url(__FILE__);?>gen-manifest.php" method="post">
           <h2>Manifest Values</h2>
           <label for="short_name">Short Name</label>
