@@ -32,46 +32,6 @@
   add_action('wp_footer', 'pwa_add_footer_tags');
 
   /**
-   * [pwa_insert_manifest] This function create the manifest template in json format
-   * and tries to save the json file in root
-  */
-  /*function pwa_insert_manifest(){
-    $options = get_option('pwa_manifest_option');
-    $fcm_sender_id = $options['pwa_manifest_fcm_sender_id_field'];
-    $background_color = $options['pwa_manifest_bg_color_field'];
-    $theme_color = $options['pwa_manifest_theme_color_field'];
-    $short_name = $options['pwa_manifest_short_name_field'];
-    $manifest = array(
-      "gcm_sender_id_comment" => "For OneSignal web push notifications, Do not change ID",
-      "gcm_sender_id" => $fcm_sender_id,
-      "name" => get_bloginfo('name'),
-      "short_name" => $short_name,
-      "description" => get_bloginfo('description'),
-      "icons" => array(
-        array(
-          "src" => get_template_directory_uri().'/images/icon/192.png',
-          "sizes" => "192x192",
-          "type" => "image/png"
-        ),
-        array(
-          "src" => get_template_directory_uri().'/images/icon/152.png',
-          "sizes" => "152x152",
-          "type" => "image/png"
-        )
-      ),
-      "background_color" => $background_color,
-      "theme_color" => $theme_color,
-      "display" => "standalone",
-      "orientation" => "portrait",
-      "start_url" => "./",
-      "scope" => "./"
-    );
-
-    $jsonManifest = json_encode($manifest);
-    return $jsonManifest;
-  }*/
-
-  /**
   	 * [pwa_sendMessage] Esta función se encarga de enviar una push notification cuando la casilla
   	 * de enviar push es activada en la creación de una publicación.
   	 * Solo se ejecuta en publish post

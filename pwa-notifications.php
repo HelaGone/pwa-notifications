@@ -15,7 +15,6 @@
   /*
    * OPTIONS
    * pwa_onesignal_option   --> OPTION FOR ONESIGNAL'S APP ID AND REST API KEY
-   * pwa_manifest_option    --> OPTION FOR MANIFEST.JSON VALUES
   */
 
   //Including helper functions
@@ -26,6 +25,12 @@
      * Plugin activation actions
      * Should place necessaary files in root
     */
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/amp-helper-frame.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/amp-helper-frame.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/amp-permission-dialog.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/amp-permission-dialog.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/install_sw.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/install_sw.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKUpdaterWorker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/OneSignalSDKUpdaterWorker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKWorker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/OneSignalSDKWorker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/service_worker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/service_worker.js');
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 
