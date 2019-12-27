@@ -1,7 +1,5 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-load.php');
-  // header("Content-type: application/json; charset=utf-8");
-  // header('Content-Disposition: attachment; filename="manifest.json"');
 
   $background_color = $_POST['bg_color'];
   $theme_color = $_POST['th_color'];
@@ -17,8 +15,8 @@
         "type" => "image/png"
       ),
       array(
-        "src" => get_template_directory_uri().'/images/icon/152.png',
-        "sizes" => "152x152",
+        "src" => get_template_directory_uri().'/images/icon/512.png',
+        "sizes" => "512x512",
         "type" => "image/png"
       )
     ),

@@ -2,7 +2,7 @@
   /**
   * Plugin Name:       PWA & Notifications
   * Plugin URI:        https://github.com/HelaGone
-  * Description:       Handle configuration for OneSignal Notifications and Progressive Web Application
+  * Description:       Handle configuration for OneSignal Notifications and Progressive Web Application. Only for Wordpress-AMP sites
   * Version:           1.0.0
   * Author:            Holkan Luna
   * Author URI:        https://hela.dev/
@@ -25,12 +25,12 @@
      * Plugin activation actions
      * Should place necessaary files in root
     */
-    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/amp-helper-frame.html', $_SERVER['DOCUMENT_ROOT'].'/amp-helper-frame.html');
-    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/amp-permission-dialog.html', $_SERVER['DOCUMENT_ROOT'].'/amp-permission-dialog.html');
-    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/install_sw.html', $_SERVER['DOCUMENT_ROOT'].'/install_sw.html');
-    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKUpdaterWorker.js', $_SERVER['DOCUMENT_ROOT'].'/OneSignalSDKUpdaterWorker.js');
-    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKWorker.js', $_SERVER['DOCUMENT_ROOT'].'/OneSignalSDKWorker.js');
-    copy($_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/pwa-notifications/root-files/service_worker.js', $_SERVER['DOCUMENT_ROOT'].'/service_worker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/amp-helper-frame.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/amp-helper-frame.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/amp-permission-dialog.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/amp-permission-dialog.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/install_sw.html', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/install_sw.html');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKUpdaterWorker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/OneSignalSDKUpdaterWorker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/OneSignalSDKWorker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/OneSignalSDKWorker.js');
+    copy($_SERVER['DOCUMENT_ROOT'].'/plugin_construction/wp-content/plugins/pwa-notifications/root-files/service_worker.js', $_SERVER['DOCUMENT_ROOT'].'/plugin_construction/service_worker.js');
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 

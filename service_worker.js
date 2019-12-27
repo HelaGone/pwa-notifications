@@ -1,4 +1,3 @@
-<?php header('Content-Type: text/javascript'); ?>
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
 if (workbox) {
@@ -56,4 +55,4 @@ if (workbox) {
 	  })
 	);
 
-}
+}//End if workbox

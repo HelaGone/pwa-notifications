@@ -53,6 +53,15 @@
   add_action('wp_footer', 'pwa_add_footer_tags');
 
   /**
+   * add manifest link to header
+  */
+  function pwa_add_manifest_link(){
+    $siteUrl = get_site_url();
+    echo '<link rel="manifest" href="manifest.json">';
+  }
+  add_action('wp_head', 'pwa_add_manifest_link');
+
+  /**
   	 * [pwa_sendMessage] Esta función se encarga de enviar una push notification cuando la casilla
   	 * de enviar push es activada en la creación de una publicación.
   	 * Solo se ejecuta en publish post
