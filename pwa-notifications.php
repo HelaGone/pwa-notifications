@@ -26,7 +26,6 @@
      * Plugin activation actions
      * Should place necessaary files in root
     */
-    $isCopied = copy();
   }
   register_activation_hook(__FILE__, 'pwa_plugin_activation');
 
@@ -46,6 +45,12 @@
   }
   register_uninstall_hook(__FILE__, 'pwa_plugin_uninstall');
 
+  add_action('admin_print_styles', function(){
+    wp_register_style('plugin-style', plugin_dir_url(__FILE__).'css/style.css' );
+    wp_enqueue_style('plugin-style');
+  });
+
+
   if(!class_exists('PwaNotifications')){
     class PwaNotifications{
       public function __construct(){
@@ -64,12 +69,12 @@
         add_settings_field('pwa_appid_input_field', 'App ID', array($this, 'pwa_input_apikey_render'), 'pwaOptionsPage', 'pwa_one_signal_section');
         add_settings_field('pwa_restapikey_input_field', 'Rest API Key', array($this, 'pwa_input_restapikey_render'), 'pwaOptionsPage', 'pwa_one_signal_section');
 
-        register_setting('pwaOptionsPage', 'pwa_manifest_option');
-        add_settings_section('pwa_manifest_section', 'Menifest Values', array($this, 'pwa_menifest_section_callback'), 'pwaOptionsPage');
-        add_settings_field('pwa_manifest_bg_color_field', 'Background Color', array($this, 'pwa_render_input_manifest_bg_color'), 'pwaOptionsPage', 'pwa_manifest_section');
-        add_settings_field('pwa_manifest_theme_color_field', 'Theme Color', array($this, 'pwa_render_input_manifest_theme_color'), 'pwaOptionsPage', 'pwa_manifest_section');
-        add_settings_field('pwa_manifest_short_name_field', 'Short Name', array($this, 'pwa_render_input_manifest_short_name'), 'pwaOptionsPage', 'pwa_manifest_section');
-        add_settings_field('pwa_manifest_fcm_sender_id_field', 'FCM Sender ID', array($this, 'pwa_render_input_manifest_fcm_sender_id'), 'pwaOptionsPage', 'pwa_manifest_section');
+        // register_setting('pwaOptionsPage', 'pwa_manifest_option');
+        // add_settings_section('pwa_manifest_section', 'Menifest Values', array($this, 'pwa_menifest_section_callback'), 'pwaOptionsPage');
+        // add_settings_field('pwa_manifest_bg_color_field', 'Background Color', array($this, 'pwa_render_input_manifest_bg_color'), 'pwaOptionsPage', 'pwa_manifest_section');
+        // add_settings_field('pwa_manifest_theme_color_field', 'Theme Color', array($this, 'pwa_render_input_manifest_theme_color'), 'pwaOptionsPage', 'pwa_manifest_section');
+        // add_settings_field('pwa_manifest_short_name_field', 'Short Name', array($this, 'pwa_render_input_manifest_short_name'), 'pwaOptionsPage', 'pwa_manifest_section');
+        // add_settings_field('pwa_manifest_fcm_sender_id_field', 'FCM Sender ID', array($this, 'pwa_render_input_manifest_fcm_sender_id'), 'pwaOptionsPage', 'pwa_manifest_section');
       }
 
       //Section callbacks
@@ -77,9 +82,9 @@
         echo 'Paste the App ID & Rest API Key from OneSignal';
       }
 
-      public function pwa_menifest_section_callback(){
-        echo 'Paste the Background Color, Theme Color, Short Name and FCM Sender ID for the app manifest';
-      }
+      // public function pwa_menifest_section_callback(){
+      //   echo 'Paste the Background Color, Theme Color, Short Name and FCM Sender ID for the app manifest';
+      // }
 
       //Input Fields for OneSignal Configuration
       public function pwa_input_apikey_render(){
@@ -94,6 +99,7 @@
       }
 
       //Input fields for app Manifest configuration
+      /*
       public function pwa_render_input_manifest_bg_color(){
         $options = get_option('pwa_manifest_option'); ?>
         <input type="text" name="pwa_manifest_option[pwa_manifest_bg_color_field]" value="<?php echo $options['pwa_manifest_bg_color_field']; ?>" class="custom_input"/>
@@ -113,7 +119,7 @@
         $options = get_option('pwa_manifest_option'); ?>
         <input type="text" name="pwa_manifest_option[pwa_manifest_fcm_sender_id_field]" value="<?php echo $options['pwa_manifest_fcm_sender_id_field']; ?>" class="custom_input"/>
         <?php
-      }
+      }*/
 
       //Plugin Form
       public function pwa_notifications_page(){ ?>
@@ -124,6 +130,16 @@
             do_settings_sections('pwaOptionsPage');
             submit_button();
           ?>
+        </form>
+        <form class="pwa_manifest_gen" action="<?php echo plugin_dir_url(__FILE__);?>gen-manifest.php" method="post">
+          <h2>Manifest Values</h2>
+          <label for="short_name">Short Name</label>
+          <input type="text" name="short_name" value="" placeholder="Short Name"><br/>
+          <label for="bg_color">Background Color</label>
+          <input type="text" name="bg_color" value="" placeholder="#012345"><br/>
+          <label for="th_color">Theme Color</label>
+          <input type="text" name="th_color" value="" placeholder="#A1B2C3"><br/>
+          <input type="submit" name="Submit" value="Save Manifest" class="button button-primary">
         </form>
         <?php
       }//End pwa_notifications_page

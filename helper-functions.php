@@ -35,7 +35,7 @@
    * [pwa_insert_manifest] This function create the manifest template in json format
    * and tries to save the json file in root
   */
-  function pwa_insert_manifest(){
+  /*function pwa_insert_manifest(){
     $options = get_option('pwa_manifest_option');
     $fcm_sender_id = $options['pwa_manifest_fcm_sender_id_field'];
     $background_color = $options['pwa_manifest_bg_color_field'];
@@ -68,10 +68,8 @@
     );
 
     $jsonManifest = json_encode($manifest);
-    // $fp = fopen('manifest.json', 'w');
-    // fwrite($fp, $jsonManifest);
-    // fclose($fp);
-  }
+    return $jsonManifest;
+  }*/
 
   /**
   	 * [pwa_sendMessage] Esta función se encarga de enviar una push notification cuando la casilla
